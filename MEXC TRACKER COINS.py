@@ -69,7 +69,7 @@ prices_btc_high.append(3)
 prices_btc_low.append(2)
 
 # crear un DataFrame con dos filas
-tracking_list = pd.DataFrame(columns=['Coin', 'var all %', 'last 6 %', 'Var 16/BTC %', 'Interest ($)', 'OI last 6 %','OI all %'])
+tracking_list = pd.DataFrame(columns=['Coin', 'var all %', 'last 6 %', 'Var 16/BTC %', '|Var all %|', '|Last 6 %|','|Var 16/BTC %|'])
 
 
 #creacion de clase tabla
@@ -79,15 +79,15 @@ class Tabla(tk.Canvas):
         self.parent = parent
 
         # Creamos una tabla con 4 columnas
-        self.tabla = ttk.Treeview(self, columns=('Coin','var all %', 'last 6 %', 'Var 16/BTC %', 'Interest ($)', 'OI last 6 %', 'OI all %'), show='headings', height=173)
+        self.tabla = ttk.Treeview(self, columns=('Coin','var all %', 'last 6 %', 'Var 16/BTC %', '|Var all %|', '|Last 6 %|', '|Var 16/BTC %|'), show='headings', height=173)
         self.tabla.heading('Coin', text='Coin')
         self.tabla.heading('var all %', text='var all %')
         self.tabla.heading('last 6 %', text='last 6 %')
         self.tabla.heading('Var 16/BTC %', text='Var 16/BTC %')
-        self.tabla.heading('Interest ($)', text='Interest ($)')
-        self.tabla.heading('OI last 6 %', text='OI last 6 %')
-        self.tabla.heading('OI all %', text='OI all %')
-        
+        self.tabla.heading('|Var all %|', text='|Var all %|')
+        self.tabla.heading('|Last 6 %|', text='|Last 6 %|')
+        self.tabla.heading('|Var 16/BTC %|', text='|Var 16/BTC %|')
+
         # Configuramos el estilo de la tabla
         style = ttk.Style()
         style.configure('Treeview', rowheight=30, font=('Arial', 12), background="gray25", foreground="white")
@@ -112,9 +112,9 @@ class Tabla(tk.Canvas):
         self.tabla.column('var all %',  width=110)
         self.tabla.column('last 6 %',  width=110)
         self.tabla.column('Var 16/BTC %', width=140)
-        self.tabla.column('Interest ($)',  width=110)
-        self.tabla.column('OI last 6 %', width=110)
-        self.tabla.column('OI all %',  width=110)
+        self.tabla.column('|Var all %|',  width=110)
+        self.tabla.column('|Last 6 %|', width=110)
+        self.tabla.column('|Var 16/BTC %|',  width=110)
 
 
     def mover_tabla(self, event):
@@ -264,64 +264,73 @@ def coins_price_action(symbol, symbol_df, current_price, open_interest):
     else: 
         coin_var_all_2=-round(((price_coin_up_lasts_hours-price_coin_down_lasts_hours)*100/price_coin_up_lasts_hours)*100/btc_var_down,2)
     
+    #valor absoluto de los movimientos
+    interest_coin_all=abs(coin_var_all)
+    coin_var_6_OI=abs(coin_var_lasts)
+    coin_var_all_OI=abs(coin_var_all_2)
+    
+    #interest abierto
+    ##############################################################
 
     #calculando el interes abierto de la moneda en total USD
-    interest_coin_all=round((current_price*open_interest)/1000)
+    #interest_coin_all=round((current_price*open_interest)/1000)
        
     #variacion de OI de las ultimas 6 velas
-    data_futures_last_6 = data_futures[-6:]
+    #data_futures_last_6 = data_futures[-6:]
     
     #verificamos si la lista no esta vacia y calculamos maximos y minimos
-    try:
-        OI_coin_up_6=max(data_futures_last_6[symbol+"_OI"])
-        OI_coin_down_6=min(data_futures_last_6[symbol+"_OI"])
-    except:
-        OI_coin_up_6=0
-        OI_coin_down_6=0
+    #try:
+    #    OI_coin_up_6=max(data_futures_last_6[symbol+"_OI"])
+    #    OI_coin_down_6=min(data_futures_last_6[symbol+"_OI"])
+    #except:
+    #    OI_coin_up_6=0
+    #    OI_coin_down_6=0
             
     #calculando la longitud de la variacion con respecto al interes abierto actual
-    coin_var_up_OI_6=OI_coin_up_6-open_interest
-    coin_var_down_OI_6=open_interest-OI_coin_down_6
+    #coin_var_up_OI_6=OI_coin_up_6-open_interest
+    #coin_var_down_OI_6=open_interest-OI_coin_down_6
     
     #si la distancia con el OI actual es mayor o menor
     #evitando la division entre 0
-    if OI_coin_up_6 == 0 or OI_coin_down_6 == 0:
-        coin_var_6_OI = 0 
-    else:
-        if coin_var_up_OI_6 < coin_var_down_OI_6:
+    #if OI_coin_up_6 == 0 or OI_coin_down_6 == 0:
+    #    coin_var_6_OI = 0 
+    #else:
+    #    if coin_var_up_OI_6 < coin_var_down_OI_6:
             # Variación al alza en las últimas 6 velas de OI
-            coin_var_6_OI = round(((OI_coin_up_6 - OI_coin_down_6) * 100 / OI_coin_down_6), 2)
-        else:
-            coin_var_6_OI = -round(((OI_coin_down_6 - OI_coin_up_6) * 100 / OI_coin_up_6), 2)
+    #        coin_var_6_OI = round(((OI_coin_up_6 - OI_coin_down_6) * 100 / OI_coin_down_6), 2)
+    #    else:
+    #        coin_var_6_OI = -round(((OI_coin_down_6 - OI_coin_up_6) * 100 / OI_coin_up_6), 2)
     
     
 
     #variacion de las ultimas 16 velas
-    data_futures_last = data_futures[-16:]
+    #data_futures_last = data_futures[-16:]
     
     #verificamos si la lista no esta vacia y calculamos maximos y minimos
-    try:
-        OI_coin_up=max(data_futures_last[symbol+"_OI"])
-        OI_coin_down=min(data_futures_last[symbol+"_OI"])
-    except:
-        OI_coin_up=0
-        OI_coin_down=0
+    #try:
+    #    OI_coin_up=max(data_futures_last[symbol+"_OI"])
+    #    OI_coin_down=min(data_futures_last[symbol+"_OI"])
+    #except:
+    #    OI_coin_up=0
+    #    OI_coin_down=0
                 
     #calculando la longitud de la variacion con respecto al interes abierto actual
-    coin_var_up_OI_all=OI_coin_up-open_interest
-    coin_var_down_OI_all=open_interest-OI_coin_down
+    #coin_var_up_OI_all=OI_coin_up-open_interest
+    #coin_var_down_OI_all=open_interest-OI_coin_down
     
     #si la distancia con el OI actual es mayor o menor
     #evitando la division entre 0
-    if OI_coin_up == 0 or OI_coin_down == 0:
-        coin_var_all_OI = 0 
-    else:
-        if coin_var_up_OI_all < coin_var_down_OI_all:
+    #if OI_coin_up == 0 or OI_coin_down == 0:
+    #    coin_var_all_OI = 0 
+    #else:
+    #    if coin_var_up_OI_all < coin_var_down_OI_all:
             # Variación al alza en las últimas 16 velas de OI
-            coin_var_all_OI = round(((OI_coin_up - OI_coin_down) * 100 / OI_coin_down), 2)
-        else:
-            coin_var_all_OI = -round(((OI_coin_down - OI_coin_up) * 100 / OI_coin_up), 2)
-
+    #        coin_var_all_OI = round(((OI_coin_up - OI_coin_down) * 100 / OI_coin_down), 2)
+    #    else:
+    #        coin_var_all_OI = -round(((OI_coin_down - OI_coin_up) * 100 / OI_coin_up), 2)
+            
+    #anadimos los datos a la tabla
+    #####################################################################################
     # actualizar la variacion de todas las velas y OI en la tabla
     if symbol in tracking_list['Coin'].values:
         tracking_list.loc[tracking_list['Coin'] == symbol, 'var all %'] = coin_var_all
@@ -350,13 +359,14 @@ def coins_price_action(symbol, symbol_df, current_price, open_interest):
         if not nueva_fila_df.empty:
             #nueva_fila_df = nueva_fila_df.fillna(0)
             tracking_list = pd.concat([tracking_list, nueva_fila_df], ignore_index=True)
-        
 
+    #actualizamos las tablas de interes abierto
+    ############################################################################################
     # actualizar el interes abierto actual
     if symbol in tracking_list['Coin'].values:
-        tracking_list.loc[tracking_list['Coin'] == symbol, 'Interest ($)'] = interest_coin_all
+        tracking_list.loc[tracking_list['Coin'] == symbol, '|Var all %|'] = interest_coin_all
     else:
-        nueva_fila = {'Coin': symbol, 'Interest ($)': interest_coin_all}
+        nueva_fila = {'Coin': symbol, '|Var all %|': interest_coin_all}
         nueva_fila_df = pd.DataFrame([nueva_fila])  # Crear un DataFrame con la nueva fila
         if not nueva_fila_df.empty:
             #nueva_fila_df = nueva_fila_df.fillna(0)
@@ -365,10 +375,10 @@ def coins_price_action(symbol, symbol_df, current_price, open_interest):
 
     # actualizar el interes abierto en porcentaje total de las ultimas 6 velas
     if symbol in tracking_list['Coin'].values:
-        tracking_list.loc[tracking_list['Coin'] == symbol, 'OI last 6 %'] = coin_var_6_OI
+        tracking_list.loc[tracking_list['Coin'] == symbol, '|Last 6 %|'] = coin_var_6_OI
         
     else:
-        nueva_fila = {'Coin': symbol, 'OI last 6 %': coin_var_6_OI}
+        nueva_fila = {'Coin': symbol, '|Last 6 %|': coin_var_6_OI}
         nueva_fila_df = pd.DataFrame([nueva_fila])  # Crear un DataFrame con la nueva fila
         if not nueva_fila_df.empty:
             #nueva_fila_df = nueva_fila_df.fillna(0)
@@ -376,9 +386,9 @@ def coins_price_action(symbol, symbol_df, current_price, open_interest):
         
     # actualizar el interes abierto en porcentaje total
     if symbol in tracking_list['Coin'].values:
-        tracking_list.loc[tracking_list['Coin'] == symbol, 'OI all %'] = coin_var_all_OI
+        tracking_list.loc[tracking_list['Coin'] == symbol, '|Var 16/BTC %|'] = coin_var_all_OI
     else:
-        nueva_fila = {'Coin': symbol, 'OI all %': coin_var_all_OI}
+        nueva_fila = {'Coin': symbol, '|Var 16/BTC %|': coin_var_all_OI}
         nueva_fila_df = pd.DataFrame([nueva_fila])  # Crear un DataFrame con la nueva fila
         if not nueva_fila_df.empty:
             #nueva_fila_df = nueva_fila_df.fillna(0)
@@ -689,11 +699,11 @@ def coin_analisis_all(trading_pairs, index=0):
         #print(f"  Temporalidad: {interval}")
         #print(f"Bollinger high: {percentage_current_upper:.2f} ({float(BOLLINGER_VALOR_ARRIBA)})")
         #print(f" Bollinger low: {percentage_current_lower:.2f} ({float(BOLLINGER_VALOR_ABAJO)})")
-        print(f" Lista UPPER: {listadoVelaShort}")
-        print(f"  Lista LOWER: {listadoVelaLong}\n")
+        print(f" Lista UPPER: {listadoVelaShort[-10:]}")
+        print(f"  Lista LOWER: {listadoVelaLong[-10:]}\n")
         text_cmd.insert(tk.END, "wakaka", ("blue",))
-        print(f"rsi high: {list_RSIU}") 
-        print(f"rsi low: {list_RSID}") 
+        print(f"rsi high: {list_RSIU[-10:]}") 
+        print(f"rsi low: {list_RSID[-10:]}")
        
         
         print(f"---- {(ciclo_bloque):03d} de {cantidad_pares} monedas ----")
@@ -760,9 +770,9 @@ tabla.tabla.heading('Coin', text='Coin', command=lambda: ordenar_columna(tabla, 
 tabla.tabla.heading('var all %', text='var all %', command=lambda: ordenar_columna(tabla, 'var all %', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'var all' else True))
 tabla.tabla.heading('last 6 %', text='last 6 %', command=lambda: ordenar_columna(tabla, 'last 6 %', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'last 6 %' else True))
 tabla.tabla.heading('Var 16/BTC %', text='Var 16/BTC %', command=lambda: ordenar_columna(tabla, 'Var 16/BTC %', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'Var 16/BTC %' else True))
-tabla.tabla.heading('Interest ($)', text='Interest ($)', command=lambda: ordenar_columna(tabla, 'Interest ($)', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'Interest ($)' else True))
-tabla.tabla.heading('OI last 6 %', text='OI last 6 %', command=lambda: ordenar_columna(tabla, 'OI last 6 %', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'OI last 6 %' else True))
-tabla.tabla.heading('OI all %', text='OI all %', command=lambda: ordenar_columna(tabla, 'OI all %', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == 'OI all %' else True))
+tabla.tabla.heading('|Var all %|', text='|Var all %|', command=lambda: ordenar_columna(tabla, '|Var all %|', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == '|Var all %|' else True))
+tabla.tabla.heading('|Last 6 %|', text='|Last 6 %|', command=lambda: ordenar_columna(tabla, '|Last 6 %|', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == '|Last 6 %|' else True))
+tabla.tabla.heading('|Var 16/BTC %|', text='|Var 16/BTC %|', command=lambda: ordenar_columna(tabla, '|Var 16/BTC %|', not tabla.ultimo_orden if tabla.ultima_columna_ordenada == '|Var 16/BTC %|' else True))
 
           
 # Llamar al método klines para obtener datos históricos
