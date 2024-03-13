@@ -30,5 +30,3 @@ This script can be executed using Jupyter Notebook or Spyder. Simply run the `me
 
 Make sure to install these dependencies before running the script. You can install them using pip:
 
-```bash
-pip install mexc_sdk pandas openpyxl
