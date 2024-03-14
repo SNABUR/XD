@@ -604,7 +604,7 @@ def coin_analisis_all(trading_pairs, index=0):
         listadoVelaShort.clear()
         list_RSID.clear()
         list_RSIU.clear()
-        save_data_futures()
+        #save_data_futures()
         #guardando data futures
 
         mainloop()
@@ -642,43 +642,43 @@ def coin_analisis_all(trading_pairs, index=0):
             listadoVelaLong.append(symbol)
             if SONIDO == "SI":
                 winsound.PlaySound('Alertcoin.wav', winsound.SND_ALIAS)
-                try:
-                    date_bollinger=time.strftime('%d/%m/%y', time.localtime())
-                    time_bollinger=time.strftime('%H:%M:%S', time.localtime())
-                    abajo="DOWN"
-                    process_data(date_bollinger, time_bollinger, symbol, abajo, current_price)
+                #try:
+                #    date_bollinger=time.strftime('%d/%m/%y', time.localtime())
+                #    time_bollinger=time.strftime('%H:%M:%S', time.localtime())
+                #    abajo="DOWN"
+                #    process_data(date_bollinger, time_bollinger, symbol, abajo, current_price)
 
                     # Abre el archivo de Excel en modo lectura/escritura
-                    wb = openpyxl.load_workbook("Bollinger_data_mexc.xlsx")
+                #    wb = openpyxl.load_workbook("Bollinger_data_mexc.xlsx")
                     # Selecciona la primera hoja de cálculo del libro
-                    sheet = wb[wb.sheetnames[0]]
+                #    sheet = wb[wb.sheetnames[0]]
                     # Añade los datos al final de la hoja de cálculo
-                    sheet.append([date1, time1, data1, status, price_now1])
+                #    sheet.append([date1, time1, data1, status, price_now1])
                     # Guarda el archivo de Excel
-                    wb.save("Bollinger_data_mexc.xlsx")
-                except:
-                    None
+                #    wb.save("Bollinger_data_mexc.xlsx")
+                #except:
+                #    None
 
         if percentage_current_upper >= float(BOLLINGER_VALOR_ARRIBA):
             listadoVelaShort.append(symbol)
             if SONIDO == "SI":
                 winsound.PlaySound('Alertcoin.wav', winsound.SND_ALIAS)
-                try:
-                    date_bollinger=time.strftime('%d/%m/%y', time.localtime())
-                    time_bollinger=time.strftime('%H:%M:%S', time.localtime())
-                    arriba="UP"
-                    process_data(date_bollinger, time_bollinger, symbol, arriba, current_price)
+                #try:
+                #    date_bollinger=time.strftime('%d/%m/%y', time.localtime())
+                #    time_bollinger=time.strftime('%H:%M:%S', time.localtime())
+                #    arriba="UP"
+                #    process_data(date_bollinger, time_bollinger, symbol, arriba, current_price)
 
                     # Abre el archivo de Excel en modo lectura/escritura
-                    wb = openpyxl.load_workbook("Bollinger_data_mexc.xlsx")
+                #    wb = openpyxl.load_workbook("Bollinger_data_mexc.xlsx")
                     # Selecciona la primera hoja de cálculo del libro
-                    sheet = wb[wb.sheetnames[0]]
+                #    sheet = wb[wb.sheetnames[0]]
                     # Añade los datos al final de la hoja de cálculo
-                    sheet.append([date1, time1, data1, status, price_now1])
+                #    sheet.append([date1, time1, data1, status, price_now1])
                     # Guarda el archivo de Excel
-                    wb.save("Bollinger_data_mexc.xlsx")
-                except:
-                    None
+                #    wb.save("Bollinger_data_mexc.xlsx")
+                #except:
+                #    None
 
 
         
